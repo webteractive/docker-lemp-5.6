@@ -1,0 +1,28 @@
+version: '2'
+
+# networks:
+#   app-tier:
+#     driver: bridge
+
+services:
+  web:
+    image: 'bitnami/nginx:latest'
+    ports:
+      - '8080:80'
+    volumes:
+      - ./app.conf:/bitnami/nginx/conf/vhosts/app.conf
+    links:
+      - app
+  app:
+    image: 'bitnami/php-fpm:5.6-prod'
+    volumes:
+      - ./app:/app
+    links:
+      - database
+  database:
+    image: 'mysql:5.6'
+    environment:
+      - "MYSQL_ROOT_PASSWORD=secret"
+      - "MYSQL_DATABASE=dockerApp"
+    ports:
+        - "33060:3306"
